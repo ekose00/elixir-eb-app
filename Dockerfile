@@ -19,7 +19,7 @@ RUN yum -y groupinstall "Development Tools" && \
 ARG OTP_VERSION
 WORKDIR /tmp
 RUN mkdir -p otp && \
-    curl -LS "http://erlang.org/download/otp_src_${OTP_VERSION}.tar.gz" --output otp.tar.gz && \
+    curl -LS "http://erlang.org/download/otp_src_23.0.tar.gz" --output otp.tar.gz && \
     tar xfz otp.tar.gz -C otp --strip-components=1
 WORKDIR otp/
 RUN ./configure && make && make install
@@ -29,7 +29,7 @@ ARG ELIXIR_VERSION
 ENV LC_ALL en_US.UTF-8
 WORKDIR /tmp
 RUN mkdir -p elixir && \
-    curl -LS "https://github.com/elixir-lang/elixir/archive/v${ELIXIR_VERSION}.tar.gz" --output elixir.tar.gz && \
+    curl -LS "https://github.com/elixir-lang/elixir/archive/v1.10.4.tar.gz" --output elixir.tar.gz && \
     tar xfz elixir.tar.gz -C elixir --strip-components=1
 WORKDIR elixir/
 RUN make install -e PATH="${PATH}:/usr/local/bin"
