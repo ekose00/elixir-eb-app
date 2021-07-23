@@ -29,6 +29,10 @@ RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
 
 # Install app
 ADD . .
+# install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+RUN mix deps.get
 RUN MIX_ENV=prod mix compile
 
 # Compile assets
