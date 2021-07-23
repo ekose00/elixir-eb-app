@@ -16,6 +16,7 @@ config :project_name, ProjectName.Repo,
   hostname: "database-test.cszaegpah1te.us-east-1.rds.amazonaws.com",
   port: 5432,
   pool_size: 20,
-  ssl: true
+  ssl: true,
+  show_sensitive_data_on_connection_error: true
 
 config :logger, level: :info
