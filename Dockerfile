@@ -26,18 +26,18 @@ RUN make install -e PATH="${PATH}:/usr/local/bin"
 # Install node
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     yum install nodejs -y
+# install hex + rebar
+RUN MIX_ENV=prod mix local.rebar
+RUN MIX_ENV=prod mix local.hex --force
+RUN MIX_ENV=prod mix deps.get
 
 # Install app
 ADD . .
-# install hex + rebar
-RUN mix local.hex --force && \
-    mix local.rebar --force
-RUN mix deps.get
-RUN MIX_ENV=prod mix compile
 
 # Compile assets
 RUN NODE_ENV=production node_modules/brunch/bin/brunch build --production
 RUN MIX_ENV=prod mix phoenix.digest
+RUN MIX_ENV=prod mix compile
 
 # Exposes this port from the docker container to the host machine
 EXPOSE 4000
