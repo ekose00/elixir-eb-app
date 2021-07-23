@@ -1,28 +1,31 @@
-# Set the Docker image you want to base your image off.
-# I chose this one because it has Elixir preinstalled.
-FROM elixir:1.12.2
+FROM amazonlinux:2 AS build
 
-# Setup Node - Phoenix uses the Node library `brunch` to compile assets.
-# The official node instructions want you to pipe a script from the
-# internet through sudo. There are alternatives:
-# https://www.joyent.com/blog/installing-node-and-npm
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - && apt-get install -y nodejs
+# https://gist.github.com/techgaun/335ef6f6abb5a254c66d73ac6b390262
+RUN yum -y groupinstall "Development Tools" && \
+    yum -y install openssl-devel ncurses-devel
 
-# Install other stable dependencies that don't change often
+# Install Erlang
+ARG OTP_VERSION
+WORKDIR /tmp
+RUN mkdir -p otp && \
+    curl -LS "http://erlang.org/download/otp_src_24.0.tar.gz" --output otp.tar.gz && \
+    tar xfz otp.tar.gz -C otp --strip-components=1
+WORKDIR otp/
+RUN ./configure && make && make install
 
-# Compile app
-RUN mkdir /app
-WORKDIR /app
+# Install Elixir
+ARG ELIXIR_VERSION
+ENV LC_ALL en_US.UTF-8
+WORKDIR /tmp
+RUN mkdir -p elixir && \
+    curl -LS "https://github.com/elixir-lang/elixir/archive/v1.12.2.tar.gz" --output elixir.tar.gz && \
+    tar xfz elixir.tar.gz -C elixir --strip-components=1
+WORKDIR elixir/
+RUN make install -e PATH="${PATH}:/usr/local/bin"
 
-# Install Elixir Deps
-ADD mix.* ./
-RUN MIX_ENV=prod mix local.rebar
-RUN MIX_ENV=prod mix local.hex --force
-RUN MIX_ENV=prod mix deps.get
-
-# Install Node Deps
-ADD package.json ./
-RUN npm install
+# Install node
+RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
+    yum install nodejs -y
 
 # Install app
 ADD . .
