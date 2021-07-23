@@ -47,7 +47,7 @@ ADD . .
 COPY assets/package.json assets/package-lock.json assets/
 RUN MIX_ENV=prod mix deps.get
 RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
-RUN MIX_ENV=prod mix phoenix.digest
+RUN MIX_ENV=prod mix phx.digest
 RUN MIX_ENV=prod mix compile
 
 # Exposes this port from the docker container to the host machine
