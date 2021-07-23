@@ -26,6 +26,15 @@ RUN make install -e PATH="${PATH}:/usr/local/bin"
 # Install node
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     yum install nodejs -y
+
+
+# Compile app
+RUN mkdir /app
+WORKDIR /app
+
+# Install Elixir Deps
+ADD mix.* ./
+
 # install hex + rebar
 RUN MIX_ENV=prod mix local.rebar
 RUN MIX_ENV=prod mix local.hex --force
