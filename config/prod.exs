@@ -6,6 +6,7 @@ config :project_name, ProjectName.Endpoint,
   secret_key_base: "postgres",
   code_reloader: false,
   cache_static_manifest: "priv/static/manifest.json",
+  show_sensitive_data_on_connection_error: true,
   server: true
 
 config :project_name, ProjectName.Repo,
