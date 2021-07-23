@@ -43,8 +43,9 @@ RUN MIX_ENV=prod mix deps.get
 # Install app
 ADD . .
 
-# Compile assets
-RUN NODE_ENV=production node_modules/brunch/bin/brunch build --production
+# build assets
+COPY assets/package.json assets/package-lock.json assets/
+RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
 RUN MIX_ENV=prod mix phoenix.digest
 RUN MIX_ENV=prod mix compile
 
