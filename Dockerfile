@@ -1,7 +1,7 @@
-FROM elixir:1.9.0-alpine as build
+FROM elixir:1.11.4-alpine as build
 
 # install build dependencies
-RUN apk add --no-cache build-base npm git python
+RUN apk add --no-cache build-base npm git python3
 
 ENV WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN mix local.hex --force && \
     
 # set build ENV
 ENV MIX_ENV=prod
-ENV DATABASE_URL=database-test.cwpfdkzendvi.us-east-1.rds.amazonaws.com
+ENV DATABASE_URL=ecto://postgres:postgres@database-test.cwpfdkzendvi.us-east-1.rds.amazonaws.com/postgres
 ENV SECRET_KEY_BASE=teste
 ENV PORT=4000
     
@@ -40,7 +40,7 @@ COPY lib lib
 RUN mix do compile, release
 
 # prepare release image
-FROM alpine:3.14
+FROM alpine:3.9
 RUN apk add --no-cache openssl ncurses-libs
 
 WORKDIR /app
