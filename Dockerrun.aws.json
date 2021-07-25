@@ -11,6 +11,7 @@
   "containerDefinitions": [
     {
       "name": "elixir-eb-app",
+      "image": "elixir:1.11.4-alpine",
       "essential": true,
       "portMappings": [
         {
