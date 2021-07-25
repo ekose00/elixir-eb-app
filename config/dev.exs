@@ -5,7 +5,7 @@ config :hello, Hello.Repo,
   username: "postgres",
   password: "postgres",
   database: "postgres",
-  hostname: "database-test.cszaegpah1te.us-east-1.rds.amazonaws.com",
+  hostname: "database-test.cdhi6jty0xqi.us-east-1.rds.amazonaws.com",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
