@@ -19,7 +19,7 @@ RUN mix local.hex --force && \
     mix local.rebar --force
     
 # set build ENV
-ENV MIX_ENV=dev
+ENV MIX_ENV=prod
 ENV DATABASE_URL=ecto://postgres:postgres@database-test.cwpfdkzendvi.us-east-1.rds.amazonaws.com/postgres
 ENV SECRET_KEY_BASE=teste
 ENV PORT=4000
@@ -47,7 +47,7 @@ WORKDIR /app
 
 RUN chown nobody:nobody /app
 USER nobody:nobody
-COPY --from=build --chown=nobody:nobody /app/_build/dev/rel/hello ./
+COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/hello ./
 
 ENV HOME=/app
 
