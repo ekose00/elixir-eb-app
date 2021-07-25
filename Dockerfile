@@ -20,7 +20,7 @@ RUN mix local.hex --force && \
     
 # set build ENV
 ENV MIX_ENV=prod
-ENV DATABASE_URL=database-test.cdhi6jty0xqi.us-east-1.rds.amazonaws.com
+ENV DATABASE_URL=database-test.cwpfdkzendvi.us-east-1.rds.amazonaws.com
 ENV SECRET_KEY_BASE=teste
 ENV PORT=4000
     
