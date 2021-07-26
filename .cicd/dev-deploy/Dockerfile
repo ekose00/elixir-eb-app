@@ -1,4 +1,4 @@
-FROM elixir:1.11.4-alpine as build
+FROM elixir:1.11.4-alpine
 
 # install build dependencies
 RUN apk add --no-cache build-base npm git python3
@@ -38,16 +38,7 @@ RUN mix phx.digest
 
 COPY lib lib
 RUN mix do compile, release
-
-# prepare release image
-FROM alpine:3.9
-RUN apk add --no-cache openssl ncurses-libs
-
-WORKDIR /app
-
-RUN chown nobody:nobody /app
-USER nobody:nobody
-COPY --from=build --chown=nobody:nobody /app/_build/dev/rel/hello ./
+COPY /app/_build/dev/rel/hello ./
 
 ENV HOME=/app
 
