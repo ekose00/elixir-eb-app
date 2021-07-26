@@ -64,6 +64,8 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
+      - name: Selecting env
+        run: cp -r .cicd/dev-deploy/* . && ls
       - name: Deploy elasticbeanstalk
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
