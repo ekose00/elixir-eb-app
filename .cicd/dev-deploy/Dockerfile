@@ -38,7 +38,6 @@ RUN mix phx.digest
 
 COPY lib lib
 RUN mix do compile, release
-COPY /app/_build/dev/rel/hello ./
 
 ENV HOME=/app
 
@@ -46,4 +45,4 @@ ENV HOME=/app
 EXPOSE 4000
 
 # The command to run when this image starts up
-CMD ["bin/hello", "start"]
+CMD ["_build/dev/rel/hello/bin/hello", "start"]
