@@ -65,7 +65,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
       - name: Selecting env
-        run: cp -r .cicd/dev-deploy/. . && git add .
+        run: cp -r .cicd/dev-deploy/. . && git add . && git commit -m "Temp"
       - name: Deploy elasticbeanstalk
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
