@@ -2,7 +2,7 @@
   "AWSEBDockerrunVersion": "1",
   "volumes": [
     {
-      "name": "elixir-eb-app-qa",
+      "name": "elixir-eb-app-hml",
       "host": {
         "sourcePath": "/app"
       }
@@ -10,7 +10,7 @@
   ],
   "containerDefinitions": [
     {
-      "name": "elixir-eb-app-qa",
+      "name": "elixir-eb-app-hml",
       "image": "elixir:1.11.4-alpine",
       "essential": true,
       "portMappings": [
