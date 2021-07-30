@@ -45,4 +45,4 @@ ENV HOME=/app
 EXPOSE 4000
 
 # The command to run when this image starts up
-CMD ["_build/dev/rel/hello/bin/hello", "start"]
+CMD ["_build/prod/rel/hello/bin/hello", "start"]
