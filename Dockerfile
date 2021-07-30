@@ -1,7 +1,7 @@
 FROM elixir:1.11.4-alpine
 
 # install build dependencies
-RUN apk add --no-cache build-base npm git python3
+RUN apk add --no-cache build-base npm git python3 inotify-tools
 
 ENV WORKDIR /app
 
