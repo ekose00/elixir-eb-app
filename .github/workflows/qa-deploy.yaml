@@ -67,7 +67,7 @@ jobs:
       - name: Config git
         run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
       - name: Selecting env
-        run: cp -r .cicd/dev-deploy/. . && git add . && git commit -m "Temp"
+        run: cp -r .cicd/qa-deploy/. . && git add . && git commit -m "Temp"
       - name: Deploy elasticbeanstalk
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
