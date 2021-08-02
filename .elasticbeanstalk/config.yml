@@ -1,6 +1,6 @@
 branch-defaults:
   qa:
-    environment: null
+    environment: elixir-eb-app-prod
 global:
   application_name: elixir-eb-app-prod
   branch: null
