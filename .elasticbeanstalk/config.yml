@@ -1,8 +1,8 @@
 branch-defaults:
   qa:
-    environment: null
+    environment: elixir-eb-app-qa
 global:
-  application_name: elixir-eb-app-prod
+  application_name: elixir-eb-app-qa
   branch: null
   default_ec2_keyname: null
   default_platform: Docker running on 64bit Amazon Linux 2
