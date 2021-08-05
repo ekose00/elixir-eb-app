@@ -1,0 +1,3 @@
+envs:
+  DATABASE_URL: "database test"
+  SECRET_KEY_BASE: "teste_key"
