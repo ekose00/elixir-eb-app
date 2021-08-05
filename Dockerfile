@@ -20,8 +20,8 @@ RUN mix local.hex --force && \
     
 # set build ENV
 ENV MIX_ENV=prod
-ENV DATABASE_URL=ecto://postgres:postgres@database-1.cr4kclqiiibl.us-east-1.rds.amazonaws.com/postgres
-ENV SECRET_KEY_BASE=teste
+ENV DATABASE_URL=${DATABASE_URL}
+ENV SECRET_KEY_BASE=${SECRET_KEY_BASE}
 ENV PORT=4000
     
 # install mix dependencies
