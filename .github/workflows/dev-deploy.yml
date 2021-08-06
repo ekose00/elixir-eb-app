@@ -87,10 +87,10 @@ jobs:
         run: |
           cp -r .cicd/dev-deploy/. .
 
-          cat << EOF > .ebextensions/resources.config
+          cat << EOF >> .ebextensions/resources.config
           aws:elasticbeanstalk:application:environment:
-            DATABASE_URL: ${DATABASE_URL}
-            SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+            DATABASE_URL: ${{ env.DATABASE_URL }}
+            SECRET_KEY_BASE: ${{ env.SECRET_KEY_BASE }}
             KEY: ${{ env.KEY }}
             KEY2: ${{ env.KEY2 }}
           EOF
