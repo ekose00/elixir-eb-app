@@ -80,6 +80,11 @@ jobs:
 
       - uses: "marvinpinto/action-inject-ssm-secrets@latest"
         with:
+          ssm_parameter: "/dev/hello/api/secret-key"
+          env_variable_name: "SECRET_KEY_BASE"
+
+      - uses: "marvinpinto/action-inject-ssm-secrets@latest"
+        with:
           ssm_parameter: "/dev/commons/test"
           env_variable_name: "KEY"
 
@@ -88,11 +93,11 @@ jobs:
           cp -r .cicd/dev-deploy/. .
 
           cat << EOF >> .ebextensions/resources.config
-          aws:elasticbeanstalk:application:environment:
-            DATABASE_URL: ${{ env.DATABASE_URL }}
-            SECRET_KEY_BASE: ${{ env.SECRET_KEY_BASE }}
-            KEY: ${{ env.KEY }}
-            KEY2: ${{ env.KEY2 }}
+            aws:elasticbeanstalk:application:environment:
+              DATABASE_URL: ${{ env.DATABASE_URL }}
+              SECRET_KEY_BASE: ${{ env.SECRET_KEY_BASE }}
+              KEY: ${{ env.KEY }}
+              KEY2: ${{ env.KEY2 }}
           EOF
       - name: LS
         run: |
