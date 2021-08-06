@@ -61,18 +61,52 @@ jobs:
   deploy:
     # needs: build
     runs-on: ubuntu-latest
+    env:
+      KEY2: "Value2"
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-      - name: Config git
-        run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
-      - name: Selecting env
-        run: cp -r .cicd/dev-deploy/. . && git add . && git commit -m "Temp"
-      - name: Deploy elasticbeanstalk
-        uses: hmanzur/actions-aws-eb@v1.0.0
+
+      - uses: "aws-actions/configure-aws-credentials@v1"
         with:
-          command: "deploy elixir-eb-app-prod --timeout 30 --staged"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: "us-east-1"
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "us-east-1"
+
+      - uses: "marvinpinto/action-inject-ssm-secrets@latest"
+        with:
+          ssm_parameter: "/dev/hello/database/url"
+          env_variable_name: "DATABASE_URL"
+
+      - uses: "marvinpinto/action-inject-ssm-secrets@latest"
+        with:
+          ssm_parameter: "/dev/commons/test"
+          env_variable_name: "KEY"
+
+      - name: Setting envs
+        run: |
+          cp -r .cicd/dev-deploy/. .
+
+          cat << EOF > .ebextensions/resources.config
+          aws:elasticbeanstalk:application:environment:
+            DATABASE_URL: ${DATABASE_URL}
+            SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+            KEY: ${{ env.KEY }}
+            KEY2: ${{ env.KEY2 }}
+          EOF
+      - name: LS
+        run: |
+          ls
+          cat .ebextensions/resources.config
+      - name: Config git
+        run: |
+          git config --global user.email "you@example.com" && git config --global user.name "Your Name"
+          git add . && git commit -m "Temp"
+      # - name: Deploy elasticbeanstalk
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   with:
+      #     command: "deploy elixir-eb-app-prod --timeout 30 --staged"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_DEFAULT_REGION: "us-east-1"
