@@ -8,34 +8,32 @@ on:
     branches: [dev]
 
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
 
-  #   services:
-  #     db:
-  #       image: postgres:11
-  #       ports: ["5432:5432"]
-  #       env:
-  #         POSTGRES_PASSWORD: postgres
-  #       options: >-
-  #         --health-cmd pg_isready
-  #         --health-interval 10s
-  #         --health-timeout 5s
-  #         --health-retries 5
+    services:
+      db:
+        image: postgres:11
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: erlef/setup-beam@v1
-  #       with:
-  #         otp-version: "24.0"
-  #         elixir-version: "1.12.2"
-  #     - run: mix deps.get
-  #     - run: mix test
-
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "24.0"
+          elixir-version: "1.12.2"
+      - run: mix deps.get
+      - run: mix test
   # build:
   #   # needs: test
   #   runs-on: ubuntu-latest
-
   #   steps:
   #     - name: Checkout source code
   #       uses: actions/checkout@v2
@@ -59,55 +57,26 @@ jobs:
   #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
   #         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
   deploy:
-    # needs: build
+    needs: build
     runs-on: ubuntu-latest
     env:
-      KEY2: "Value2"
+      REGION: us-east-1
+      ENVIRONMENT: staging
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
 
       - uses: "aws-actions/configure-aws-credentials@v1"
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: "us-east-1"
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+          aws-region: ${{ env.REGION }}
 
-      - uses: "marvinpinto/action-inject-ssm-secrets@latest"
-        with:
-          ssm_parameter: "/dev/hello/database/url"
-          env_variable_name: "DATABASE_URL"
-
-      - uses: "marvinpinto/action-inject-ssm-secrets@latest"
-        with:
-          ssm_parameter: "/dev/hello/api/secret-key"
-          env_variable_name: "SECRET_KEY_BASE"
-
-      - uses: "marvinpinto/action-inject-ssm-secrets@latest"
-        with:
-          ssm_parameter: "/dev/commons/test"
-          env_variable_name: "KEY"
-
-      - name: Setting envs
-        run: |
-          cp -r .cicd/dev-deploy/. .
-
-          cat << EOF >> .ebextensions/resources.config
-            aws:elasticbeanstalk:application:environment:
-              DATABASE_URL: ${{ env.DATABASE_URL }}
-              SECRET_KEY_BASE: ${{ env.SECRET_KEY_BASE }}
-              KEY: ${{ env.KEY }}
-              KEY2: ${{ env.KEY2 }}
-          EOF
       - name: Config git
         run: |
-          git config --global user.email "you@example.com" && git config --global user.name "Your Name"
-          git add . && git commit -m "Temp"
+          git config --global user.email "test.webserver@example.com" && git config --global user.name "test WebServer"
+          git add . && git commit -m "Temporary"
       - name: Deploy elasticbeanstalk
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "deploy elixir-eb-app-prod --timeout 30 --staged"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: "us-east-1"
+        run: |
+          pip install awsebcli --upgrade --user
+          eb deploy elixir-eb-app-${{ env.ENVIRONMENT }} --staged
