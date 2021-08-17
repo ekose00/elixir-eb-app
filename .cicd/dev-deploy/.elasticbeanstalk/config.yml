@@ -3,10 +3,10 @@ branch-defaults:
     environment: null
     group_suffix: null
   dev:
-    environment: elixir-eb-app-prod
+    environment: elixir-eb-app-dev
     group_suffix: null
 global:
-  application_name: elixir-eb-app-prod
+  application_name: elixir-eb-app-dev
   branch: null
   default_ec2_keyname: aws-eb
   default_platform: Docker running on 64bit Amazon Linux 2
