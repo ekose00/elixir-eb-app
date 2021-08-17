@@ -74,7 +74,7 @@ jobs:
 
       - name: Config git
         run: |
-          cp -r .cicd/${{ env.ENVIRONMENT }}-deploy/ .
+          cp -r .cicd/${{ env.ENVIRONMENT }}-deploy/* .
           git config --global user.email "test.webserver@example.com" && git config --global user.name "test WebServer"
           git add . && git commit -m "Temporary"
       - name: Deploy elasticbeanstalk
